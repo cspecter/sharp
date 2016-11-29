@@ -98,19 +98,23 @@ module.exports.download_vips = function () {
           } catch (err) {}
         });
       });
-      const gotOpt = {};
-      if (process.env.npm_config_https_proxy) {
-        // Use the NPM-configured HTTPS proxy
-        gotOpt.agent = caw(process.env.npm_config_https_proxy);
-      }
-      const url = distBaseUrl + tarFilename;
-      got.stream(url, gotOpt).on('response', function (response) {
-        if (response.statusCode !== 200) {
-          error(url + ' status code ' + response.statusCode);
-        }
-      }).on('error', function (err) {
-        error('Download of ' + url + ' failed: ' + err.message);
-      }).pipe(tmpFile);
+
+      var readFile = fs.createReadStream(distBaseUrl + tarFilename);
+      readFile.pipe(tmpFile);
+
+      // const gotOpt = {};
+      // if (process.env.npm_config_https_proxy) {
+      //   // Use the NPM-configured HTTPS proxy
+      //   gotOpt.agent = caw(process.env.npm_config_https_proxy);
+      // }
+      // const url = distBaseUrl + tarFilename;
+      // got.stream(url, gotOpt).on('response', function (response) {
+      //   if (response.statusCode !== 200) {
+      //     error(url + ' status code ' + response.statusCode);
+      //   }
+      // }).on('error', function (err) {
+      //   error('Download of ' + url + ' failed: ' + err.message);
+      // }).pipe(tmpFile);
     }
   }
 };
